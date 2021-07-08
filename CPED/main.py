@@ -6,7 +6,7 @@ import json
 import os
 
 
-class ListLenError(Exception): pass
+class ListLenghtError(Exception): pass
 
 
 class CPED:
@@ -99,12 +99,12 @@ class CPED:
 				"text need to be type: str")
 
 		all_chars = list(text)
-		
+
 		for loop in range(self._conversion):
 			for i, char in enumerate(all_chars):
 
 				try:
-					all_chars[i] = all_chars[i].replace(char, self._charmap.keys()[list(self._charmap.values()).index(char)])
+					all_chars[i] = all_chars[i].replace(char, list(self._charmap.keys())[list(self._charmap.values()).index(char)])
 				
 				except:
 					pass
@@ -129,7 +129,7 @@ class CPED:
 			mixed_chars = ''
 
 			if len(self.var_config) != len(text):
-				raise errors.ListLenghtError(
+				raise ListLenghtError(
 					"List has not the same length as his linked list/word.")
 
 			all_chars = list(text)
@@ -148,7 +148,7 @@ class CPED:
 			unravel_chars = ''
 
 			if len(self.var_config) != len(text):
-				raise errors.ListLenghtError("List has not the same length as his linked list/word.")
+				raise ListLenghtError("List has not the same length as his linked list/word.")
 
 			all_chars = list(text)
 
@@ -169,7 +169,7 @@ def random_config(*config, list_size=26):
 	if config[0] == str:
 		
 		if list_size != 26:
-			raise errors.ListLenghtError(
+			raise ListLenghtError(
 				"Maximum list size for type: str <= 26 !")
 
 		if config[1] == 'lower':

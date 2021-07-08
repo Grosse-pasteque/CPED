@@ -6,11 +6,11 @@ import CPED
 cped = CPED.CPED('charmap.json', 3)
 
 
-encrypt_word = cped.encrypt("hello GOOD -_- 777")
-decrypt_word = cped.decrypt(encrypt_word)
+encrypted = cped.encrypt("hello GOOD -_- 777")
+decrypted = cped.decrypt(encrypted)
 
-print(encrypt_word)
-print(decrypt_word)
+print(encrypted)
+print(decrypted)
 
 
 
@@ -26,10 +26,10 @@ mixer = cped.CharsMixer(random_int_config)
 
 
 
-mixed_word = mixer.mix_chars(encrypt_word)
-print(mixed_word)
-
+mixed_word = mixer.mix_chars(encrypted)
 unravel_word = mixer.unravel_chars(mixed_word)
+
+print(mixed_word)
 print(unravel_word)
 
 

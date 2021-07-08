@@ -1,1 +1,1 @@
-from .main import CPED, random_config, ListLenError
+from .main import CPED, random_config, ListLenghtError

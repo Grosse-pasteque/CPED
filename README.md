@@ -26,6 +26,8 @@ The `charmap.json` file corespong to [charmap](./charmap.json) which contains:
 
 Here `a` will be transformed in `v` in the first convertion.
 *You can also do that `{"a": "vm"}`, so `a` will be transformed into `vm`*
+__**WARNING**__: This feature is not working for now I am curently trying to fix it but it's hard ...
+
 
 -------------
 
@@ -37,11 +39,11 @@ Then we can start encrypting or decrypting:
 - decrypt:      the encrypted result
 
 ```python
-encrypt_word = cped.encrypt("hello GOOD -_- 777")
-decrypt_word = cped.decrypt(encrypt_word)
+encrypted = cped.encrypt("hello GOOD -_- 777")
+decrypted = cped.decrypt(encrypted)
 
-print(encrypt_word)
-print(decrypt_word)
+print(encrypted)
+print(decrypted)
 ```
 
 
@@ -91,42 +93,30 @@ We can also use a random configuration and randomize our encrypted text, like th
 - Lists to save our random configurations.
 
 ```python
-my_list_0 = []
-my_list_1 = []
-```
-- Define the core of our CharsMixer with the `my_list_0` as his configuration.
-
-```python
-mixer = cped.CharsMixer(my_list_0)
-```
-- Define our random configuration
-    - **WARNING** : CharsMixer configuration must be a list filled with `int` values (indexes)
-    - **WARNING** : Str configuration works only for `configure_alphabet(list)` and `configure_caps_alphabet(list)`
-
-```python
-random_int_config = random_config(
-	int,
-	list_size=18,
-	var_config=my_list_0
-)
-
-random_str_lower_config = random_config(
-	str,
-	'lower',
-	list_size=26,
-	var_config=my_list_1
-)
+random_int_config = CPED.random_config(int, list_size=18)
+random_str_lower_config = CPED.random_config(str, 'lower')
 
 print(random_int_config)
 print(random_str_lower_config)
 ```
-- Mix our encrypted word `encrypt_word` to make it even worst to decrypt
+- Define the core of our CharsMixer with the `random_int_config` as his configuration.
+
 
 ```python
-mixed_word = mixer.mix_chars(encrypt_word)
+mixer = cped.CharsMixer(random_int_config)
+```
+
+- Define our random configuration
+    - **WARNING** : CharsMixer configuration must be a list filled with `int` values (indexes)
+
+
+- Mix our encrypted word `encrypted` to make it even worst to decrypt
+
+```python
+mixed_word = mixer.mix_chars(encrypted)
 print(mixed_word)
 ```
-- Unravel the mixed word `mixed_word` to get `encrypt_word`
+- Unravel the mixed word `mixed_word` to get `encrypted`
 
 ```python
 unravel_word = mixer.unravel_chars(mixed_word)
@@ -143,7 +133,7 @@ Lists will become:
 - Our 'random_str_lower_config' mixed str configuration (not used): `['a', 'n', 'm', 'u', 'v', 'l', 'j', 'q', 'k', 'g', 'x', 'o', 'w', 'i', 'd', 'f', 'e', 't', 'b', 'h', 'y', 'p', 'r', 's', 'c', 'z']`
 
 Mixer will change:
-- Our mixed word with 'my_list_0' configuration: `p2 j P( amE2=LP2=a`
+- Our mixed word with 'random_int_config' configuration: `p2 j P( amE2=LP2=a`
 - Our unravel word (our crypted word): `jmaap LPPE =(= 222`
 
 
@@ -157,7 +147,7 @@ __All code:__ [Complete file example](./example/example.py)
 If you use a charmap with all utf-8 chars which has a lenght of 0x110000: 1114112 and that you shuffled your text, the number of combinaissons for this text will be :
 
 ```py
-print(cped.proba(text, charmap_len=0x110000 - 1))
+print(cped.combinaissons(text, charmap_len=0x110000 - 1))
 ```
 
 Aproximately equal to **[Large Number !](./example/combinaissons.txt)**.
