@@ -10,7 +10,11 @@ config = {
 		"punctuation": True,
 		"whitespace": False
 	},
-	"random-chars-per-char": (1, 1) # not working for now :/
+	"use-separators": True,
+	"separators": 4,
+	"separators-lenght": (2, 4),
+	"separators-charmap": "charmap",
+	"random-chars-per-char": (1, 4) # not working for now :/
 }
 
 import string
@@ -31,6 +35,24 @@ else:
 
 
 base = ["{"]
+
+if config['use-separators']:
+	separators = '\n\t"separators": ['
+	seps = []
+	m = list(eval(config['separators-charmap']))
+	for i in range(config['separators']):
+		sep = ""
+		r = randint(*config['separators-lenght'])
+		for i in range(r):
+			sep += choice(m)
+
+		seps.append(f'"{sep}"')
+
+	separators += ', '.join(seps) + '],'
+
+	base[0] += separators
+
+
 chosed = []
 for char in list(charmap):
 	while True:

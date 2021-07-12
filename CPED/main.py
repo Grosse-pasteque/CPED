@@ -2,11 +2,13 @@
 from string import ascii_lowercase, ascii_uppercase
 from random import randint, choice
 from math import factorial
+import itertools
 import json
 import os
 
 
 class ListLenghtError(Exception): pass
+class ConfigurationError(Exception): pass
 
 
 class CPED:
@@ -41,6 +43,22 @@ class CPED:
 			self._charmap_file = charmap
 			self._charmap = json.loads(open(charmap).read())
 
+		if "separators" not in list(self._charmap.keys()):
+			for key, value in self._charmap.items():
+				if len(value) > 1:
+					raise ConfigurationError(
+						"if you want to be able to use more than 1 char per key you need to configure separators.")
+
+		self._separators = None
+
+		if "separators" in list(self._charmap.keys()):
+			if not isinstance(self._charmap['separators'], list):
+				raise TypeError(
+					f"The 'separators' key value need to be {list} not {type(self._charmap['separators'])}")
+
+			self._separators = self._charmap['separators']
+			self._charmap.pop('separators')
+
 
 	@property
 	def charmap(self):
@@ -50,11 +68,16 @@ class CPED:
 	@property
 	def charmap_file(self):
 		return self._charmap_file
-	
+
 
 	@property
 	def conversion(self):
 		return self._conversion
+
+
+	@property
+	def separators(self):
+		return self._separators
 
 
 	def combinaissons(self, text: str, charmap_len=None, shuffle=True):
@@ -90,6 +113,23 @@ class CPED:
 				except:
 					pass
 
+			if self._separators != None:
+				seps = [
+					choice(self._separators)
+					for i in range(len(all_chars) - 1)
+				]
+
+				new_text = ""
+				for i, char in enumerate(all_chars):
+					new_text += char
+
+					if i != len(seps):
+						new_text += seps[i]
+
+				all_chars = list(new_text)
+
+			all_chars = list(''.join(all_chars))
+
 		return ''.join(all_chars)
 
 
@@ -98,18 +138,30 @@ class CPED:
 			raise TypeError(
 				"text need to be type: str")
 
-		all_chars = list(text)
+		all_chars = text
 
 		for loop in range(self._conversion):
-			for i, char in enumerate(all_chars):
+			
+			if self._separators != None:
+				for sep in self._separators:
+					all_chars = all_chars.replace(sep, '<-0->')
+					# WARNING: please don't use this string '<-0->' as a value in your config (charmap)
 
+				all_chars = all_chars.split('<-0->')
+
+			else:
+				all_chars = list(all_chars)
+
+			for i, char in enumerate(all_chars):
 				try:
 					all_chars[i] = all_chars[i].replace(char, list(self._charmap.keys())[list(self._charmap.values()).index(char)])
-				
-				except:
+
+				except (IndexError, ValueError):
 					pass
 
-		return ''.join(all_chars)
+			all_chars = ''.join(all_chars)
+
+		return all_chars
 
 
 	class CharsMixer:

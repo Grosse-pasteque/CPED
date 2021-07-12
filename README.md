@@ -1,4 +1,4 @@
-# Custom Personal Encrypting and Decrypting {CPED} [3.9.2]
+# Custom Personal Encrypting and Decrypting {CPED} [3.9.4]
 
 ## By Grosse pastèque#6705
 
@@ -26,7 +26,7 @@ The `charmap.json` file corespong to [charmap](./charmap.json) which contains:
 
 Here `a` will be transformed in `v` in the first convertion.
 *You can also do that `{"a": "vm"}`, so `a` will be transformed into `vm`*
-__**WARNING**__: This feature is not working for now I am curently trying to fix it but it's hard ...
+__**ADVICE**__: If you use this feature you will need to use separators.
 
 
 -------------
@@ -45,6 +45,47 @@ decrypted = cped.decrypt(encrypted)
 print(encrypted)
 print(decrypted)
 ```
+
+
+-------------
+
+
+### Separators:
+
+Separators can be used if you want but if your config values does not all have a lenght of 1, you must use separators.
+To use them, add a key `separators` like below:
+```json
+{
+    "separators": ["separator", ...]
+}
+```
+
+The list contains all the separators you want to use.
+A separator can't be equel to a key value otherwise the module will not work.
+
+Example:
+```json
+{
+    "separators": ["cba", "aba"],
+
+    "a": "bc",
+    "b": "ac",
+    "c": "ba"
+}
+```
+
+```py
+print(cped.encrypt('abc'))
+
+```
+
+The result can be ( **[separator]** ):
+bc[aba]ac[cba]ba : bcabaaccbaba
+bc[cba]ac[aba]ba : bccbaacababa
+
+Because separators a placed randomly, but there a decrypted the same way so the decrypted result is always `abc`, *Great !*
+
+__**WARNING**__: Make sure that separators have no letters in common, like that ["as", "dz", "zk"] `z` is common to `dz` and `zk`
 
 
 -------------
